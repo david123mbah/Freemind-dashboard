@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "ride-sharing-a8947",
+    "staging": "ride-sharing-a8947"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
