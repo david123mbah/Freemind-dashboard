@@ -11,7 +11,7 @@ import {
 const Homepage = () => {
   const [animate, setAnimate] = useState(false);
   const { RiveComponent } = useRive({
-    src: "./public/little_boy.riv", // Make sure to add your Rive file in the public folder
+    src: "./little_boy.riv", // Make sure to add your Rive file in the public folder
     stateMachines: "State Machine 1",
     autoplay: true,
   });
