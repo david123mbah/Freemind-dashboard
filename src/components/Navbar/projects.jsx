@@ -1,72 +1,123 @@
-import React from 'react';
+import React from "react";
 
 const Projects = () => {
-  // Projects data
   const projectsList = [
     {
       id: 1,
       name: "Carepulse",
-      tagline: "AI- assistant chatbot buit",
+      tagline: "AI-Powered Healthcare Assistant",
+      description:
+        "An intelligent healthcare chatbot that provides 24/7 medical assistance, symptom checking, and healthcare recommendations. Built with advanced NLP and machine learning algorithms to understand and respond to user health queries accurately.",
+      technologies: ["React", "Python", "TensorFlow", "OpenAI API"],
       image: "/Screenshot (760).png",
       url: "/projects/togeva",
+      status: "Live",
     },
     {
       id: 2,
       name: "Quickbite Mobile",
-      tagline: " Food divery App Order, Eat, Repeat",
+      tagline: "Seamless Food Delivery Experience",
+      description:
+        "A comprehensive food delivery platform that connects users with local restaurants. Features include real-time order tracking, scheduled deliveries, and a reward system for loyal customers. The app processes thousands of orders daily.",
+      technologies: ["React Native", "Node.js", "MongoDB", "Firebase"],
       image: "/images/flavrr-logo.png",
       url: "/projects/flavrr",
+      status: "Live",
     },
     {
       id: 3,
       name: "Flutter Widget Hub",
-      tagline: "Build Stunning Flutter Apps with Ease",
-      image: "/images/flutter-widget-hub-logo.png",
+      tagline: "Custom Widget Library for Flutter",
+      description:
+        "A comprehensive collection of custom Flutter widgets and UI components. Includes animated widgets, responsive layouts, and material design implementations. Used by over 5000 developers worldwide.",
+      technologies: ["Flutter", "Dart", "Firebase"],
+      image: "/kyda_logo.png",
       url: "/projects/flutter-widget-hub",
+      status: "Open Source",
     },
     {
       id: 4,
-      name: "Freemind AI mental app",
-      tagline: "meditation, peotry ,music, AI chatbot , mental tests and Doctor Appiontent",
+      name: "Freemind AI Mental App",
+      tagline: "Complete Mental Wellness Platform",
+      description:
+        "An all-in-one mental wellness application featuring guided meditation, AI therapy chatbot, mood tracking, and professional counselor appointments. Includes a unique poetry and music therapy module.",
+      technologies: ["React Native", "Node.js", "MongoDB", "TensorFlow"],
       image: "/images/flutter-open-uis-logo.png",
       url: "/projects/flutter-open-uis",
-    }
+      status: "Beta",
+    },
   ];
 
   return (
-    <div className="py-8 px-4 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">Projects</h1>
-      
-      <p className="text-gray-700 mb-8">
-        I've worked on tons of little projects over the years but these are the ones that I'm most
-        proud of. Many of them are open-source, so if you see something that piques your
-        interest, check out the code and contribute if you have ideas on how it can be improved.
-      </p>
-      
-      <div className="grid md:grid-cols-2 gap-6">
-        {projectsList.map((project) => (
-          <a 
-            key={project.id}
-            href={project.url}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex"
-          >
-            <div className="w-1/4 p-4 flex items-center justify-center">
-              <img 
+    <div className="py-12 px-4 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          Featured Projects
+        </h1>
+        <p className="text-xl text-gray-600 mb-12 max-w-3xl">
+          Showcasing my journey through technology and innovation. Each project
+          represents a unique challenge and solution in the world of software
+          development.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projectsList.map((project) => (
+            <div
+              key={project.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
+            >
+              <img
                 src={project.image}
-                alt={`${project.name} logo`}
-                className="w-44 h-22 object-contain"
-                onError={(e) => {
-                  e.target.onerror = null; 
-                  e.target.src = "/images/default-project.png";
-                }}
+                alt={project.name}
+                className="w-full h-48 object-cover"
               />
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg font-bold text-gray-900 truncate">
+                    {project.name}
+                  </h3>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      project.status === "Live"
+                        ? "bg-green-100 text-green-800"
+                        : project.status === "Beta"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-blue-100 text-blue-800"
+                    }`}
+                  >
+                    {project.status}
+                  </span>
+                </div>
+
+                <p className="text-sm font-medium text-indigo-600 mb-2">
+                  {project.tagline}
+                </p>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                  {project.description}
+                </p>
+
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-1">
+                    {project.technologies.map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-sm text-indigo-600 hover:text-indigo-800 transition-colors duration-300">
+                  <a href={project.url} className="hover:underline">
+                    {project.url}
+                  </a>
+                </p>
+              </div>
             </div>
-            <div className="w-3/4 p-4">
-              <h3 className="text-xl font-semibold text-gray-800">{project.name}</h3>
-              <p className="text-gray-600">{project.tagline}</p>
-            </div>
-          </a>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

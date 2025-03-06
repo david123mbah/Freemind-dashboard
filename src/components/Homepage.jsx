@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRive } from "@rive-app/react-canvas";
 import {
   FaGithub,
   FaLinkedin,
@@ -9,9 +10,13 @@ import {
 
 const Homepage = () => {
   const [animate, setAnimate] = useState(false);
+  const { RiveComponent } = useRive({
+    src: "./public/little_boy.riv", // Make sure to add your Rive file in the public folder
+    stateMachines: "State Machine 1",
+    autoplay: true,
+  });
 
   useEffect(() => {
-    // Trigger animation after component mounts
     setAnimate(true);
   }, []);
 
@@ -45,17 +50,12 @@ const Homepage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 dark:bg-black transition-colors duration-300 overflow-hidden relative">
-      {/* Stars Background */}
-      <div className="absolute inset-0">
-        <Stars />
-      </div>
-
-      <div className="container mx-auto px-4 py-16 md:py-24 flex items-center relative z-10">
-        {/* Left content section */}
-        <div className="w-full md:w-1/2 space-y-6">
+    <div className="min-h-screen  font-['Lato']">
+      <div className="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center gap-8">
+        {/* Left side - Text content */}
+        <div className="w-full md:w-1/2 space-y-8 order-2 md:order-1">
           <h1
-            className={`text-4xl md:text-5xl font-bold text-white transition-all duration-1000 ${
+            className={`text-4xl md:text-6xl font-bold text-[#222d55] tracking-tight transition-all duration-1000 ${
               animate
                 ? "translate-x-0 opacity-100"
                 : "-translate-x-10 opacity-0"
@@ -67,7 +67,7 @@ const Homepage = () => {
           </h1>
 
           <p
-            className={`text-lg text-gray-300 max-w-xl transition-all duration-1000 delay-300 ${
+            className={`text-xl text-[#222d55] max-w-xl leading-relaxed transition-all duration-1000 delay-300 ${
               animate
                 ? "translate-x-0 opacity-100"
                 : "-translate-x-10 opacity-0"
@@ -78,9 +78,8 @@ const Homepage = () => {
             promoting STEM.
           </p>
 
-          {/* Social links */}
           <div
-            className={`flex flex-wrap gap-4 transition-all duration-1000 delay-500 ${
+            className={`flex flex-wrap gap-6 transition-all duration-1000 delay-500 ${
               animate ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
             }`}
           >
@@ -88,7 +87,7 @@ const Homepage = () => {
               <a
                 key={link.name}
                 href={link.url}
-                className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
+                className="flex items-center gap-2 text-[#2f3542] hover:text-white transition-colors text-lg"
                 aria-label={link.name}
               >
                 {link.icon}
@@ -97,85 +96,12 @@ const Homepage = () => {
             ))}
           </div>
         </div>
+
+        {/* Right side - Rive animation */}
+        <div className="w-[600px] h-[400px] mx-auto md:mx-0 order-1 md:order-2">
+          <RiveComponent className="w-full h-full" />
+        </div>
       </div>
-    </div>
-  );
-};
-
-// Stars component with shooting stars
-const Stars = () => {
-  return (
-    <div className="absolute inset-0">
-      {/* Static stars */}
-      {[...Array(100)].map((_, i) => {
-        const top = `${Math.random() * 100}%`;
-        const left = `${Math.random() * 100}%`;
-        const size = Math.random() * 2 + 1;
-        const animationDelay = `${Math.random() * 10}s`;
-
-        return (
-          <div
-            key={i}
-            className="absolute bg-white dark:bg-gray-300 rounded-full animate-twinkle"
-            style={{
-              top,
-              left,
-              width: `${size}px`,
-              height: `${size}px`,
-              animationDelay,
-            }}
-          />
-        );
-      })}
-
-      {/* Shooting stars */}
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute h-0.5 w-0.5 bg-white dark:bg-gray-300 animate-shooting-star"
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-          }}
-        />
-      ))}
-
-      {/* Add styles for animations */}
-      <style jsx>{`
-        @keyframes twinkle {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-
-        @keyframes shooting {
-          0% {
-            transform: rotate(45deg) translateX(0);
-            opacity: 1;
-            width: 0;
-          }
-          50% {
-            width: 100px;
-          }
-          100% {
-            transform: rotate(45deg) translateX(1000px);
-            opacity: 0;
-          }
-        }
-
-        .animate-twinkle {
-          animation: twinkle 4s infinite;
-        }
-
-        .animate-shooting-star {
-          animation: shooting 3s infinite;
-        }
-      `}</style>
     </div>
   );
 };

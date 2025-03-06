@@ -1,0 +1,14 @@
+.bg-cool-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(240, 248, 255, 1) 25%,
+    rgba(230, 240, 255, 1) 50%,
+    rgba(220, 235, 255, 1) 75%,
+    rgba(210, 230, 255, 1) 100%
+  );
+}
+
+.bg-cool-white {
+  background-color: rgba(250, 252, 255, 0.95);
+}

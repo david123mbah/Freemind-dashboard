@@ -35,7 +35,7 @@ const Navbar = () => {
   }, [darkMode]);
 
   return (
-    <nav className="w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-colors duration-200">
+    <nav className="w-full border-b border-gray-200 dark:border-gray-70 dark:bg-gray-900 transition-colors duration-200">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
@@ -43,7 +43,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center">
               {" "}
               {/* Use Link instead of anchor tag */}
-              <div className="h-8 w-8 flex items-center justify-center bg-black dark:bg-gray-800 text-white">
+              <div className="h-8 w-8 flex items-center justify-center bg-[#222d55] dark:bg-gray-800 text-white">
                 <span className="font-mono text-sm">{"{M}"}</span>
               </div>
             </Link>
@@ -54,25 +54,25 @@ const Navbar = () => {
             <div className="flex items-center justify-between w-full max-w-md">
               <Link
                 to="/about"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
+                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
               >
                 About
               </Link>
               <Link
                 to="/projects"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
+                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
               >
                 Projects
               </Link>
               <Link
                 to="/blog"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
+                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
               >
-                Blog
+                Experience
               </Link>
               <Link
                 to="/photos"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
+                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
               >
                 Photos
               </Link>
