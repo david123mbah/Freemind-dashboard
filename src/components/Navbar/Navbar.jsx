@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   // Initialize dark mode based on user's system preference
   useEffect(() => {
@@ -35,54 +36,46 @@ const Navbar = () => {
   }, [darkMode]);
 
   return (
-    <nav className="w-full border-b border-gray-200 dark:border-gray-70 dark:bg-gray-900 transition-colors duration-200">
-      <div className="w-full px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 w-full border-b border-gray-200/80 dark:border-gray-700/80 dark:bg-gray-900/95 backdrop-blur-sm z-50 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <div className="flex-shrink-0 ">
-            <Link to="/" className="flex items-center">
-              {" "}
-              {/* Use Link instead of anchor tag */}
-              <div className="h-8 w-8 flex items-center justify-center bg-[#222d55] dark:bg-gray-800 text-white">
-                <span className="font-mono text-sm">{"{M}"}</span>
+          <div className="flex-shrink-0">
+            <Link to="/" className="group flex items-center">
+              <div className="h-9 w-9 flex items-center justify-center bg-[#222d55] dark:bg-gray-800 rounded-lg transform transition-transform group-hover:scale-105">
+                <span className="font-mono text-base text-white">{"{M}"}</span>
               </div>
             </Link>
           </div>
 
-          {/* Navigation Links - Now with flex-grow and justify-center */}
+          {/* Navigation Links */}
           <div className="hidden md:flex flex-grow justify-center">
-            <div className="flex items-center justify-between w-full max-w-md">
-              <Link
-                to="/about"
-                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                to="/projects"
-                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
-              >
-                Projects
-              </Link>
-              <Link
-                to="/blog"
-                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
-              >
-                Experience
-              </Link>
-              <Link
-                to="/photos"
-                className="text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white px-1 py-2 text-sm font-medium transition-colors"
-              >
-                Photos
-              </Link>
+            <div className="flex items-center justify-between space-x-8">
+              {[
+                { path: "/about", label: "About" },
+                { path: "/projects", label: "Projects" },
+                { path: "/blog", label: "Experience" },
+              ].map(({ path, label }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  className={`relative px-2 py-1 text-[#222d55] dark:text-gray-300 hover:text-black dark:hover:text-white text-base font-medium transition-all duration-200
+                    ${location.pathname === path ? "font-semibold" : ""}
+                    before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5 
+                    before:bg-[#222d55] dark:before:bg-white before:scale-x-0 hover:before:scale-x-100
+                    before:transition-transform before:duration-300 before:origin-left
+                    ${location.pathname === path ? "before:scale-x-100" : ""}`}
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
           </div>
 
           {/* Dark mode toggle */}
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors"
+            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-all duration-200"
             aria-label="Toggle dark mode"
           >
             {darkMode ? (
@@ -101,11 +94,11 @@ const Navbar = () => {
           </button>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden">
             <button
               type="button"
               onClick={toggleMobileMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 transition-all duration-200"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -130,36 +123,35 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
+      {/* Mobile menu */}
       <div
-        className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}
+        className={`md:hidden transform transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-full opacity-0"
+        }`}
         id="mobile-menu"
       >
-        <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link
-            to="/about"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            About
-          </Link>
-          <Link
-            to="/projects"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            Projects
-          </Link>
-          <Link
-            to="/blog"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            Blog
-          </Link>
-          <Link
-            to="/photos"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            Photos
-          </Link>
+        <div className="px-4 pt-2 pb-3 space-y-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+          {[
+            { path: "/about", label: "About" },
+            { path: "/projects", label: "Projects" },
+            { path: "/blog", label: "Experience" },
+          ].map(({ path, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={`block px-3 py-2 rounded-lg text-lg font-medium text-gray-600 dark:text-gray-300 
+                ${
+                  location.pathname === path
+                    ? "bg-gray-100 dark:bg-gray-800"
+                    : ""
+                }
+                hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

@@ -24,12 +24,12 @@ const Homepage = () => {
   const socialLinks = [
     {
       name: "GitHub",
-      url: "https://github.com",
+      url: "https://github.com/david123mbah/HouseFinding-website.git",
       icon: <FaGithub className="w-5 h-5" />,
     },
     {
       name: "LinkedIn",
-      url: "https://linkedin.com",
+      url: "",
       icon: <FaLinkedin className="w-5 h-5" />,
     },
     {
@@ -39,12 +39,12 @@ const Homepage = () => {
     },
     {
       name: "Instagram",
-      url: "https://instagram.com",
+      url: "https://github.com/david123mbah/HouseFinding-website.git",
       icon: <FaInstagram className="w-5 h-5" />,
     },
     {
       name: "Gmail",
-      url: "mailto:example@gmail.com",
+      url: "davidmbah1234@gmail.com",
       icon: <FaEnvelope className="w-5 h-5" />,
     },
   ];

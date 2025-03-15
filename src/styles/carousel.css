@@ -1,0 +1,30 @@
+.project-carousel .slick-track {
+  display: flex !important;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.project-carousel .slick-slide {
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.project-carousel .slick-arrow {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.project-carousel .slick-arrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.project-carousel .slick-prev {
+  left: -50px;
+}
+
+.project-carousel .slick-next {
+  right: -50px;
+}
