@@ -22,13 +22,18 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-64 bg-white border-r border-gray-200 fixed left-0 top-0">
-      <div className="p-6">
+      <div className="p-6 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-[#2b3555] rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">C</span>
+            <span className="text-white font-bold text-xl">F</span>
           </div>
-          <span className="text-xl font-bold text-gray-800">Camira</span>
+          <span className="text-xl font-bold text-gray-800">Freemind</span>
         </div>
+        <button className="text-gray-500 hover:text-[#2b3555]">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <nav className="mt-6">
