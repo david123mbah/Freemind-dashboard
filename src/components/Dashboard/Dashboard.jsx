@@ -88,7 +88,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           {/* Header section */}
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-800">Mental Health Professionals</h1>
+            <h1 className="text-3xl font-semibold text-gray-800">Mental Health</h1>
             <div className="flex items-center">
               <div className="relative mr-4">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
