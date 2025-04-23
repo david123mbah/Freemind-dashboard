@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const menuItems = [
     {
       title: "Dashboard",
@@ -21,17 +22,22 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 bg-white border-r border-gray-200 fixed left-0 top-0">
+    <div className={`h-screen ${isCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-gray-200 fixed left-0 top-0 transition-all duration-300`}>
       <div className="p-6 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-[#2b3555] rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">F</span>
           </div>
-          <span className="text-xl font-bold text-gray-800">Freemind</span>
+          {!isCollapsed && <span className="text-xl font-bold text-gray-800">Freemind</span>}
         </div>
-        <button className="text-gray-500 hover:text-[#2b3555]">
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-gray-500 hover:text-[#2b3555]"
+        >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+              d={isCollapsed ? "M13 5l7 7-7 7M5 5l7 7-7 7" : "M11 19l-7-7 7-7M19 19l-7-7 7-7"} 
+            />
           </svg>
         </button>
       </div>
@@ -42,7 +48,7 @@ const Sidebar = () => {
             key={index}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-gray-500 hover:bg-[#2b3555]/5 hover:text-[#2b3555] transition-colors duration-200 ${
+              `flex items-center ${isCollapsed ? 'px-4' : 'px-6'} py-3 text-gray-500 hover:bg-[#2b3555]/5 hover:text-[#2b3555] transition-colors duration-200 ${
                 isActive
                   ? "bg-[#2b3555]/5 text-[#2b3555] border-r-4 border-[#2b3555]"
                   : ""
@@ -62,13 +68,13 @@ const Sidebar = () => {
                 d={item.icon}
               />
             </svg>
-            <span className="ml-3 font-medium">{item.title}</span>
+            {!isCollapsed && <span className="ml-3 font-medium">{item.title}</span>}
           </NavLink>
         ))}
       </nav>
 
       <div className="absolute bottom-0 w-full p-6">
-        <div className="bg-[#2b3555]/5 rounded-xl p-4">
+        <div className={`bg-[#2b3555]/5 rounded-xl ${isCollapsed ? 'p-2' : 'p-4'}`}>
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
               <svg
@@ -85,27 +91,31 @@ const Sidebar = () => {
                 />
               </svg>
             </div>
-            <div>
-              <h4 className="text-sm font-medium text-gray-800">Dr. Marcus</h4>
-              <p className="text-xs text-gray-500">Admin</p>
-            </div>
+            {!isCollapsed && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-800">Dr. Marcus</h4>
+                <p className="text-xs text-gray-500">Admin</p>
+              </div>
+            )}
           </div>
-          <button className="w-full flex items-center justify-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-            <span>Sign Out</span>
-          </button>
+          {!isCollapsed && (
+            <button className="w-full flex items-center justify-center space-x-2 text-sm text-gray-600 hover:text-gray-800">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
