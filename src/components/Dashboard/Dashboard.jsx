@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -7,469 +7,254 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LineChart,
+  Line,
+  Legend,
 } from "recharts";
-import Sidebar from "../Sidebar/Sidebar";
+import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "../../firebase";
+
+const DEFAULT_AVATAR = "/undraw_young-man-avatar_wgbd.png"; // Use this avatar everywhere
 
 const Dashboard = () => {
-  const analyticsData = [
-    { month: "Jan", patients: 280, consultations: 420 },
-    { month: "Feb", patients: 305, consultations: 450 },
-    { month: "Mar", patients: 340, consultations: 480 },
-    { month: "Apr", patients: 355, consultations: 495 },
-    { month: "May", patients: 370, consultations: 510 },
-    { month: "Jun", patients: 396, consultations: 540 },
+  // Firebase state
+  const [doctor, setDoctor] = useState(null);
+  const [appointments, setAppointments] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Get current user profile (email, etc.)
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    // Fetch Dr Lois Nyonpoa profile
+    const fetchDoctor = async () => {
+      const docRef = doc(db, "doctors", "rHhI99SiYiWQJFhRSnA3c3o8O642");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setDoctor(docSnap.data());
+      }
+    };
+
+    // Fetch all appointments for all doctors
+    const fetchAppointments = async () => {
+      const querySnapshot = await getDocs(collection(db, "appointments"));
+      const data = [];
+      querySnapshot.forEach((doc) => {
+        const d = doc.data();
+        data.push({ id: doc.id, ...d });
+      });
+      setAppointments(data);
+    };
+
+    fetchDoctor();
+    fetchAppointments();
+
+    return () => unsubscribe();
+  }, []);
+
+  // Chart data for "Patients Visits" - this can remain as is if not fetched from Firebase
+  const visitsData = [
+    { month: "Jan", Male: 20, Female: 25 },
+    { month: "Feb", Male: 30, Female: 40 },
+    { month: "Mar", Male: 25, Female: 45 },
+    { month: "Apr", Male: 40, Female: 35 },
+    { month: "May", Male: 35, Female: 50 },
+    { month: "Jun", Male: 45, Female: 30 },
+    { month: "Jul", Male: 30, Female: 45 },
+    { month: "Aug", Male: 50, Female: 35 },
+    { month: "Sep", Male: 40, Female: 50 },
+    { month: "Oct", Male: 35, Female: 25 },
+    { month: "Nov", Male: 25, Female: 40 },
+    { month: "Dec", Male: 30, Female: 35 },
   ];
 
-  const doctorData = [
-    {
-      id: 1,
-      name: "Dr. Sarah Johnson",
-      specialization: "Clinical Psychologist",
-      patients: "42 active patients",
-      consultations: "#385-475-22-90",
-      rating: 92,
-    },
-    {
-      id: 2,
-      name: "Dr. Amanda Wilson",
-      specialization: "Psychiatrist",
-      patients: "38 active patients",
-      consultations: "#234-002-57-29",
-      rating: 88,
-    },
-    {
-      id: 3,
-      name: "Dr. Christopher Martinez",
-      specialization: "Child Psychiatrist",
-      patients: "35 active patients",
-      consultations: "#023-569-83-76",
-      rating: 85,
-    },
-    {
-      id: 4,
-      name: "Dr. Jennifer Davis",
-      specialization: "Neuropsychiatrist",
-      patients: "31 active patients",
-      consultations: "#340-001-38-13",
-      rating: 90,
-    },
-    {
-      id: 5,
-      name: "Dr. William Anderson",
-      specialization: "Addiction Specialist",
-      patients: "29 active patients",
-      consultations: "#513-393-12-98",
-      rating: 87,
-    },
-    {
-      id: 6,
-      name: "Dr. Michael Brown",
-      specialization: "Clinical Psychologist",
-      patients: "45 active patients",
-      consultations: "#563-564-27-30",
-      rating: 94,
-    },
-  ];
-
-  const [activeFilter, setActiveFilter] = useState("All");
-  const filterOptions = ["All", "Available", "In Session", "On Leave", "Emergency"];
-
-  const getProgressColor = (value) => {
-    if (value >= 80) return "bg-green-400";
-    if (value >= 60) return "bg-blue-400";
-    if (value >= 40) return "bg-yellow-400";
-    return "bg-orange-400";
-  };
+  // Calendar data (for demo, highlight 13th)
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 ml-64">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          {/* Header section */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-800">Mental Health</h1>
-            <div className="flex items-center">
-              <div className="relative mr-4">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
+    <div className="flex min-h-screen bg-[#fafbfa] font-sans">
+      {/* Sidebar slot */}
+      {/* ...existing code for sidebar... */}
+
+      <main className="flex-1 ml-[230px] px-0 py-0">
+        <div className="max-w-[1400px] mx-auto py-8 px-8">
+          {/* Doctor Profile Card */}
+          {doctor && (
+            <div className="flex items-center gap-6 bg-white rounded-[32px] shadow p-6 mb-8">
+              <img
+                src={doctor.imageUrl ? doctor.imageUrl : DEFAULT_AVATAR}
+                alt={doctor.name}
+                className="w-24 h-24 rounded-full object-cover border-4 border-[#F7E924]"
+                onError={e => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
+              />
+              <div>
+                <div className="text-2xl font-bold text-[#232323]">{doctor.name}</div>
+                <div className="text-[#bdbdbd] text-base font-semibold">{doctor.specialty} &middot; {doctor.location}</div>
+                <div className="text-[#232323] text-sm mt-2">{doctor.bio}</div>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-[#F7E924] font-bold text-lg">{doctor.rating}</span>
+                  <span className="text-[#bdbdbd] text-xs">/ 5.0</span>
                 </div>
+                {currentUser && (
+                  <div className="mt-2 text-[#bdbdbd] text-sm">
+                    <span className="font-bold text-[#232323]">Logged in as:</span> {currentUser.email}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Header */}
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-8 items-center">
+              <button className="text-[1.6rem] font-bold text-[#232323] bg-white rounded-t-[22px] px-7 py-4 shadow-none focus:outline-none border-none">
+                Doctors
+              </button>
+              <button className="text-[1.6rem] font-bold text-[#bdbdbd] bg-transparent px-7 py-4 shadow-none focus:outline-none border-none">
+                Patients
+              </button>
+              <button className="text-[1.6rem] font-bold text-[#bdbdbd] bg-transparent px-7 py-4 shadow-none focus:outline-none border-none">
+                Departments
+              </button>
+              <button className="ml-4 flex items-center gap-1 text-[#232323] font-bold text-lg bg-transparent px-0 py-0 border-none">
+                View All
+                <svg className="w-6 h-6" fill="none" stroke="#232323" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
                 <input
                   type="text"
                   placeholder="Search"
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F15A2B] focus:border-[#F15A2B]"
+                  className="pl-10 pr-4 py-2 bg-[#fafbfa] border border-[#ededed] rounded-full text-base focus:outline-none focus:ring-2 focus:ring-[#F7E924] focus:border-[#F7E924] text-[#232323] placeholder:text-[#bdbdbd] w-44"
+                  style={{ fontFamily: "Lato, sans-serif" }}
                 />
-              </div>
-              <button className="bg-[#F15A2B] hover:bg-[#F15A2B]/80 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                Add new
-                <span className="ml-2 bg-white rounded-full p-1">
-                  <svg
-                    className="h-4 w-4 text-[#F15A2B]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                <span className="absolute left-3 top-2.5 text-[#bdbdbd]">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
                 </span>
+              </div>
+              <button className="relative bg-transparent p-2 rounded-full hover:bg-[#f7e924]/30">
+                <svg className="w-7 h-7 text-[#232323]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" fill="#F7E924" />
+                </svg>
+                <span className="absolute top-0 right-0 w-3 h-3 bg-[#F7E924] rounded-full border-2 border-white"></span>
               </button>
-            </div>
-          </div>
-
-          {/* Analytics and stats section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-gray-500">Mental Health Doctors</h2>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="text-5xl font-bold text-gray-800 mt-2">156</div>
-              <div className="flex items-center mt-auto">
-                <button className="p-2 rounded-full bg-[#2b3555]/10 text-[#2b3555]">
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-gray-500">Active Consultations</h2>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="text-5xl font-bold text-gray-800 mt-2">324</div>
-              <div className="flex items-center mt-auto">
-                <button className="p-2 rounded-full bg-[#2b3555]/10 text-[#2b3555]">
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-gray-500">Recovery Rate</h2>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="text-5xl font-bold text-gray-800 mt-2">78%</div>
-              <div className="flex items-center mt-auto">
-                <button className="p-2 rounded-full bg-[#2b3555]/10 text-[#2b3555]">
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Analytics chart */}
-            <div className="bg-white p-6 rounded-xl shadow-sm lg:col-span-3">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium text-gray-700">Analytics</h2>
-                <div className="flex items-center text-sm text-gray-500">
-                  <span>Last 6 months</span>
-                  <svg
-                    className="ml-1 h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+              <div className="flex items-center gap-2 bg-transparent">
+                <img
+                  src={DEFAULT_AVATAR}
+                  alt={currentUser?.email || "User"}
+                  className="w-10 h-10 rounded-full object-cover"
+                  onError={e => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
+                />
+                <div className="flex flex-col">
+                  <span className="text-[#232323] font-bold text-base leading-4">
+                    {currentUser?.email || "User"}
+                  </span>
+                  <span className="text-[#bdbdbd] text-xs">Logged in</span>
                 </div>
-              </div>
-              <div className="flex items-baseline">
-                <div className="text-3xl font-bold text-gray-800">540</div>
-                <div className="ml-2 px-2 py-1 bg-[#2b3555]/10 text-[#2b3555] text-xs rounded-full">
-                  +8%
-                </div>
-              </div>
-              <div className="text-sm text-gray-500 mb-4">Last 6 months</div>
-
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={analyticsData}
-                    margin={{
-                      top: 5,
-                      right: 0,
-                      left: -20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip />
-                    <Bar
-                      dataKey="consultations"
-                      fill="#2b3555"
-                      radius={[5, 5, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                <svg className="w-6 h-6 text-[#bdbdbd]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
           </div>
 
-          {/* Filter section */}
-          <div className="bg-white rounded-xl shadow-sm mb-6">
-            <div className="flex overflow-x-auto p-4">
-              {filterOptions.map((filter) => (
-                <button
-                  key={filter}
-                  className={`px-4 py-2 text-sm font-medium rounded-full mr-2 ${
-                    activeFilter === filter
-                      ? "bg-[#2b3555]/10 text-[#2b3555]"
-                      : "text-gray-500 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveFilter(filter)}
-                >
-                  {filter}
-                </button>
-              ))}
-              <div className="ml-auto flex">
-                <button className="flex items-center px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 rounded-md mr-2">
-                  <svg
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                    />
-                  </svg>
-                  Export
-                </button>
-                <button className="flex items-center px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 rounded-md">
-                  <svg
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  Import
-                </button>
+          {/* Patient Visits Chart */}
+          <div className="bg-white rounded-[32px] shadow p-8 mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-4">
+                <span className="font-bold text-[#232323] text-lg">Patients Visits</span>
+                <span className="flex items-center gap-2 text-xs font-bold">
+                  <span className="w-3 h-3 rounded-full bg-[#2323f7] inline-block"></span> Male
+                  <span className="w-3 h-3 rounded-full bg-[#f723c7] inline-block ml-4"></span> Female
+                </span>
               </div>
+              <span className="text-xs text-[#bdbdbd] font-bold flex items-center gap-1">
+                Monthly
+                <svg className="w-4 h-4 text-[#bdbdbd]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </div>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={visitsData}>
+                  <CartesianGrid stroke="#f3f3f3" vertical={false} />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="Male" stroke="#2323f7" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="Female" stroke="#f723c7" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Doctors table */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          {/* Upcoming Appointments - moved below dashboard */}
+          <div className="bg-white rounded-[32px] shadow p-7 mt-10">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-extrabold text-[#232323] text-xl leading-tight tracking-tight">Upcoming Appointments</span>
+            </div>
+            <table className="min-w-full text-base">
               <thead>
-                <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <th className="px-6 py-3">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 text-[#2b3555] rounded"
-                    />
-                  </th>
-                  <th className="px-6 py-3">Doctor Name</th>
-                  <th className="px-6 py-3">Specialization</th>
-                  <th className="px-6 py-3">Active Patients</th>
-                  <th className="px-6 py-3">Consultation ID</th>
-                  <th className="px-6 py-3">Rating</th>
-                  <th className="px-6 py-3">Actions</th>
+                <tr className="bg-white text-[#bdbdbd] uppercase text-xs">
+                  <th className="px-4 py-3 font-bold text-left">Patient</th>
+                  <th className="px-4 py-3 font-bold text-left">Doctor</th>
+                  <th className="px-4 py-3 font-bold text-left">Specialty</th>
+                  <th className="px-4 py-3 font-bold text-left">Location</th>
+                  <th className="px-4 py-3 font-bold text-left">Date</th>
+                  <th className="px-4 py-3 font-bold text-left">Time</th>
+                  <th className="px-4 py-3 font-bold text-left">Status</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {doctorData.map((doctor) => (
-                  <tr key={doctor.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 text-[#2b3555] rounded"
+              <tbody>
+                {appointments.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="text-center py-6 text-[#bdbdbd]">No appointments found.</td>
+                  </tr>
+                )}
+                {appointments.map((appt) => (
+                  <tr key={appt.id} className="border-b border-[#f3f3f3]">
+                    <td className="px-4 py-3 font-semibold text-[#232323] flex items-center gap-2">
+                      <img
+                        src={DEFAULT_AVATAR}
+                        alt={appt.patientName}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-[#ededed]"
+                        onError={e => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
                       />
+                      <span>{appt.patientName}</span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 flex-shrink-0 mr-3">
-                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                            {doctor.name.charAt(3)}
-                          </div>
-                        </div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {doctor.name}
-                        </div>
-                      </div>
+                    <td className="px-4 py-3 text-[#232323]">{appt.doctorName}</td>
+                    <td className="px-4 py-3 text-[#bdbdbd]">{appt.specialty}</td>
+                    <td className="px-4 py-3 text-[#bdbdbd]">{appt.location}</td>
+                    <td className="px-4 py-3 text-[#232323]">
+                      {appt.appointmentDate && appt.appointmentDate.toDate
+                        ? appt.appointmentDate.toDate().toLocaleDateString()
+                        : appt.appointmentDate || ""}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {doctor.specialization}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {doctor.patients}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {doctor.consultations}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                          <div
-                            className={`h-2.5 rounded-full ${getProgressColor(
-                              doctor.rating
-                            )}`}
-                            style={{ width: `${doctor.rating}%` }}
-                          ></div>
-                        </div>
-                        <span className="ml-2 text-sm text-gray-500">
-                          {doctor.rating}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium">
-                      <button className="text-gray-400 hover:text-blue-600 mr-3">
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                      </button>
-                      <button className="text-gray-400 hover:text-red-600 mr-3">
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <svg
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                          />
-                        </svg>
-                      </button>
+                    <td className="px-4 py-3 text-[#232323]">{appt.timeSlot}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold
+                        ${appt.status === "confirmed" ? "bg-[#F7E924] text-[#232323]" : "bg-[#bdbdbd] text-white"}`}>
+                        {appt.status}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -477,9 +262,10 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
 
 export default Dashboard;
+

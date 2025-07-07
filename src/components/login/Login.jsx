@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { app } from '../../firebase';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,10 +11,23 @@ const Login = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    setError('');
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      // Optionally, you can check for doctor role here if needed
+      // Example: fetch user from Firestore and check role === "doctor"
+      // But as per previous instructions, login is allowed for any user
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Invalid email or password.");
+    }
   };
 
   const handleChange = (e) => {
@@ -22,95 +38,92 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex">
-      {/* Left Side - Image */}
-      <div className="hidden lg:flex w-1/2 bg-[#F15A2B] items-center justify-center p-12 relative">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="w-full h-full relative"
-        >
-          <img 
-            src="/appionvn.png" 
-            alt="Mental Health Wellness"
-            className="w-full h-full object-contain"
-            color='bg-[#F15A2B] '
-
-          />
-        </motion.div>
+    <div className="min-h-screen w-full flex bg-white">
+      {/* Left Side - Logo */}
+      <div className="hidden lg:flex w-1/2 items-center justify-center">
+        <img
+          src="/undraw_medicine_hqqg.png"
+          alt="Myyiel Logo"
+          className="max-w-[380px] w-full"
+          style={{ marginLeft: "auto", marginRight: "auto" }}
+        />
       </div>
-
-      {/* Right Side - White Login Form */}
-      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-md w-full"
-        >
-          <div className="mb-10 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-600">Sign in to continue your wellness journey</p>
+      {/* Right Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full max-w-md px-4">
+          <div className="flex flex-col items-end mb-8">
+            <svg width="48" height="48" fill="none" className="mb-2 mr-2">
+              <path d="M44 8c-2 8-12 18-28 28" stroke="#F15A2B" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M44 8l-4 8" stroke="#F15A2B" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </div>
-
+          <h2 className="text-3xl font-extrabold text-[#232323] mb-8 text-left">Connexion</h2>
+          {error && (
+            <div className="mb-4 text-[#F15A2B] text-sm text-left">{error}</div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F15A2B] focus:border-transparent"
-                placeholder="Enter your email"
-              />
+              <label className="block text-xs font-semibold text-[#232323] mb-2">E-mail</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#bdbdbd]">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path d="M16 12l-4 4-4-4m8-4H8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#F15A2B] focus:border-[#F15A2B] text-base placeholder-[#bdbdbd] transition"
+                  placeholder="Entrez votre identifiant"
+                />
+              </div>
             </div>
-
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F15A2B] focus:border-transparent"
-                placeholder="Enter your password"
-              />
+              <label className="block text-xs font-semibold text-[#232323] mb-2">Mot de passe</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#bdbdbd]">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-2V9a6 6 0 10-12 0v6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#F15A2B] focus:border-[#F15A2B] text-base placeholder-[#bdbdbd] transition"
+                  placeholder="Entrez votre Mot de passe"
+                />
+              </div>
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div className="flex items-center justify-between text-xs">
+              <label className="flex items-center gap-2 text-[#232323]">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 text-[#F15A2B] focus:ring-[#F15A2B] border-gray-300 rounded"
+                  className="accent-[#F15A2B] rounded border-gray-300"
                 />
-                <label className="ml-2 text-sm text-gray-600">Remember me</label>
-              </div>
-              <a href="#" className="text-sm text-[#F15A2B] hover:text-[#d94d23]">Forgot password?</a>
+                Se souvenir de moi
+              </label>
+              <a href="#" className="text-[#F15A2B] hover:underline font-semibold">Mot de passe oublié ?</a>
             </div>
-
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full bg-[#F15A2B] text-white py-3 rounded-lg font-medium hover:bg-[#d94d23] transition-all"
+              className="w-full bg-[#232323] text-[#F7E924] py-3 rounded-full font-bold text-lg mt-2 shadow transition"
             >
-              Sign In
+              Connexion
             </motion.button>
           </form>
-
-          <p className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account?
-            <a href="#" className="text-[#F15A2B] hover:text-[#d94d23] ml-1 font-medium">
-            </a>
-          </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+

@@ -7,7 +7,20 @@ export const content = [
   "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 ];
 export const theme = {
+  fontFamily: {
+    sans: ['Lato', 'ui-sans-serif', 'system-ui'],
+  },
   extend: {
+    colors: {
+      primary: "#2b3555",
+      accent: "#F7E924",
+      highlight: "#F15A2B",
+      sidebar: "#111215",
+      sidebarText: "#C7C8C9",
+      sidebarActive: "#F7E924",
+      card: "#18191C",
+      grayBg: "#F8F8F8",
+    },
     backgroundImage: {
       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       "gradient-conic":
@@ -42,7 +55,7 @@ export const theme = {
     ...colors,
     primary: purple,
     secondary: pink,
-    slate: _slate, // Ensures you're using the correct 'slate' color
+    slate: _slate,
   },
 };
 export const plugins = [];

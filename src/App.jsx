@@ -5,18 +5,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./index.css";
 
 import Dashboard from "./components/Dashboard/Dashboard";
-import Sidebar from "./components/Sidebar/Sidebar";
+
 import Doctors from "./components/Doctors/Doctors";
 import Login from "./components/login/Login";
 import Chats from "./components/Chats/Chats";
+import Sidebar from "./components/Doctors/Sidebar";
+
 
 const App = () => {
   const location = useLocation();
-  const showSidebar = location.pathname !== "/login";
+  const showSidebar = location.pathname !== "/";
 
   return (
     <div className="flex">
-      {showSidebar && <Sidebar />}
+      {showSidebar && <Sidebar/>}
       <div className={`w-full ${showSidebar ? "p-4" : ""}`}>
         <Routes>
           <Route path="/" element={<Login />} />
