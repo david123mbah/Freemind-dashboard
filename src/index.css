@@ -1,14 +1,30 @@
-.bg-cool-gradient {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(240, 248, 255, 1) 25%,
-    rgba(230, 240, 255, 1) 50%,
-    rgba(220, 235, 255, 1) 75%,
-    rgba(210, 230, 255, 1) 100%
-  );
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
 }
 
-.bg-cool-white {
-  background-color: rgba(250, 252, 255, 0.95);
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

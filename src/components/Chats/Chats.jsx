@@ -28,50 +28,65 @@ const Chats = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
+  const [error, setError] = useState(null); // Error state
 
   // Get current user
   useEffect(() => {
-    const auth = getAuth(app);
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
+    try {
+      const auth = getAuth(app);
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        setCurrentUser(user);
+      }, (err) => setError(err.message));
+      return () => unsubscribe();
+    } catch (err) {
+      setError(err.message);
+    }
   }, []);
 
   // Fetch chat rooms for the current user (where user is a participant)
   useEffect(() => {
     if (!currentUser) return;
-    const db = getFirestore(app);
-    const q = query(
-      collection(db, "chatRooms"),
-      where("participants", "array-contains", currentUser.uid)
-    );
-    const unsub = onSnapshot(q, (snapshot) => {
-      const rooms = [];
-      snapshot.forEach(doc => {
-        rooms.push({ id: doc.id, ...doc.data() });
-      });
-      setChatRooms(rooms);
-      if (rooms.length && !activeRoomId) setActiveRoomId(rooms[0].id);
-    });
-    return () => unsub();
+    let unsub;
+    try {
+      const db = getFirestore(app);
+      const q = query(
+        collection(db, "chatRooms"),
+        where("participants", "array-contains", currentUser.uid)
+      );
+      unsub = onSnapshot(q, (snapshot) => {
+        const rooms = [];
+        snapshot.forEach(doc => {
+          rooms.push({ id: doc.id, ...doc.data() });
+        });
+        setChatRooms(rooms);
+        if (rooms.length && !activeRoomId) setActiveRoomId(rooms[0].id);
+      }, (err) => setError(err.message));
+    } catch (err) {
+      setError(err.message);
+    }
+    return () => unsub && unsub();
     // eslint-disable-next-line
   }, [currentUser]);
 
   // Fetch messages for the active chat room (real-time, always show all messages in the room)
   useEffect(() => {
     if (!activeRoomId) return;
-    const db = getFirestore(app);
-    const messagesRef = collection(db, "chatRooms", activeRoomId, "messages");
-    const q = query(messagesRef, orderBy("timestamp", "asc"));
-    const unsub = onSnapshot(q, (snapshot) => {
-      const msgs = [];
-      snapshot.forEach(doc => {
-        msgs.push({ id: doc.id, ...doc.data() });
-      });
-      setMessages(msgs);
-    });
-    return () => unsub();
+    let unsub;
+    try {
+      const db = getFirestore(app);
+      const messagesRef = collection(db, "chatRooms", activeRoomId, "messages");
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
+      unsub = onSnapshot(q, (snapshot) => {
+        const msgs = [];
+        snapshot.forEach(doc => {
+          msgs.push({ id: doc.id, ...doc.data() });
+        });
+        setMessages(msgs);
+      }, (err) => setError(err.message));
+    } catch (err) {
+      setError(err.message);
+    }
+    return () => unsub && unsub();
   }, [activeRoomId]);
 
   // Find active chat room details
@@ -81,26 +96,30 @@ const Chats = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !currentUser || !activeRoomId) return;
-    const db = getFirestore(app);
-    const messagesRef = collection(db, "chatRooms", activeRoomId, "messages");
-    await addDoc(messagesRef, {
-      senderId: currentUser.uid,
-      receiverId: activeRoom.participants.find(uid => uid !== currentUser.uid),
-      text: message,
-      timestamp: serverTimestamp(),
-      isRead: false,
-    });
-    // Optionally update chatRoom lastMessage
-    await setDoc(
-      doc(db, "chatRooms", activeRoomId),
-      {
-        lastMessage: message,
-        lastMessageTime: serverTimestamp(),
-        lastMessageSenderId: currentUser.uid,
-      },
-      { merge: true }
-    );
-    setMessage('');
+    try {
+      const db = getFirestore(app);
+      const messagesRef = collection(db, "chatRooms", activeRoomId, "messages");
+      await addDoc(messagesRef, {
+        senderId: currentUser.uid,
+        receiverId: activeRoom.participants.find(uid => uid !== currentUser.uid),
+        text: message,
+        timestamp: serverTimestamp(),
+        isRead: false,
+      });
+      // Optionally update chatRoom lastMessage
+      await setDoc(
+        doc(db, "chatRooms", activeRoomId),
+        {
+          lastMessage: message,
+          lastMessageTime: serverTimestamp(),
+          lastMessageSenderId: currentUser.uid,
+        },
+        { merge: true }
+      );
+      setMessage('');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -122,6 +141,11 @@ const Chats = () => {
                   </svg>
                 </span>
               </div>
+              {error && (
+                <div className="mt-2 text-red-500 text-sm">
+                  {error}
+                </div>
+              )}
             </div>
             <div className="overflow-y-auto flex-1">
               {chatRooms.map((room) => (

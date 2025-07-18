@@ -1,34 +1,39 @@
 /** @type {import('tailwindcss').Config} */
-import colors, { purple, pink, slate as _slate } from "tailwindcss/colors";
+import colors, { slate as _slate, zinc, neutral } from "tailwindcss/colors";
 
 export const content = [
-  "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-  "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-  "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  "./index.html",
+  "./src/**/*.{js,ts,jsx,tsx}",
 ];
+
 export const theme = {
   fontFamily: {
     sans: ['Lato', 'ui-sans-serif', 'system-ui'],
   },
   extend: {
     colors: {
-      primary: "#2b3555",
-      accent: "#F7E924",
-      highlight: "#F15A2B",
-      sidebar: "#111215",
-      sidebarText: "#C7C8C9",
-      sidebarActive: "#F7E924",
-      card: "#18191C",
-      grayBg: "#F8F8F8",
+      primary: "#0F0F11", // Dark background
+      accent: "#F7E924",  // Yellow accent (retain as brand color)
+      highlight: "#F15A2B", // Orange accent (if needed)
+      card: "#1C1D22",  // Dark card background
+      cardSoft: "#2A2B30",  // Slightly lighter than card
+      grayText: "#B4B4B6", // Light grey for less important text
+      mutedText: "#8F8F92", // Even softer text color
+      lightBorder: "#2D2E33", // Subtle borders
+      background: "#18191C", // App background
+      softGray: "#C7C8C9", // Button icons
+      buttonBg: "#2F3035",  // Button background
+      border: "hsl(var(--border))",
     },
     backgroundImage: {
       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-      "gradient-conic":
-        "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
     },
     animation: {
       twinkle: "twinkle 4s infinite",
       "shooting-star": "shooting 3s infinite",
+      marquee: 'marquee 40s linear infinite',
+      marquee2: 'marquee2 40s linear infinite',
     },
     keyframes: {
       twinkle: {
@@ -49,13 +54,22 @@ export const theme = {
           opacity: "0",
         },
       },
+      marquee: {
+        '0%': { transform: 'translateX(0%)' },
+        '100%': { transform: 'translateX(-200%)' },
+      },
+      marquee2: {
+        '0%': { transform: 'translateX(200%)' },
+        '100%': { transform: 'translateX(0%)' },
+      },
     },
   },
   colors: {
     ...colors,
-    primary: purple,
-    secondary: pink,
     slate: _slate,
+    zinc,
+    neutral,
   },
 };
+
 export const plugins = [];
