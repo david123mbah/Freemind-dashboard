@@ -8,7 +8,7 @@ export const content = [
 
 export const theme = {
   fontFamily: {
-    sans: ['Lato', 'ui-sans-serif', 'system-ui'],
+    sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
   },
   extend: {
     colors: {
