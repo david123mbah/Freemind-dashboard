@@ -1,304 +1,258 @@
 import React, { useState } from 'react';
-import { Moon, Sun, Download, Eye } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 // Use Montserrat for geometric, modern look
 const font = "font-[Montserrat], font-sans";
 
-// Project data moved to top for easy editing
-const projectsLeft = [
+// Navigation bar data
+const navLinks = [
+  { name: "Home", href: "#" },
+  { name: "Projects", href: "#projects" },
+  { name: "Experience", href: "#experience" },
+  { name: "Education", href: "#education" },
+  { name: "Contact", href: "#contact" },
+];
+
+const projects = [
   {
     image: "/project1.png",
-    title: "Station UI – Component Library",
-    tags: ["Design System", "100+ Components", "Storybook", "Typescript", "SCSS"],
-    description: "A modern React component library for rapid UI development."
+    title: "FilmFinder",
+    period: "Jun 2023 - Oct 2023",
+    description: "FilmFinder is a movie search application that integrates cutting-edge creativity with state-of-the-art technology. Utilizing React.js for its user interface, the app features robust state management, Material UI for interface elements, and Alan AI for voice functionalities.",
   },
-  {
-    image: "/project3.png",
-    title: "Alliance DAO",
-    tags: ["NFT Gallery", "React", "Typescript"],
-    description: "NFT platform for digital assets and collectibles."
-  }
-];
-
-const projectsRight = [
   {
     image: "/project2.png",
-    title: "Station Landing Page",
-    tags: ["Solo Developer", "Next.js", "Typescript", "Figma", "SCSS"],
-    description: "A sleek landing page for Station, built with Next.js and Figma."
-  },
-  {
-    image: "/project4.png",
-    title: "Station Wallet Setup",
-    tags: ["UX/UI", "React", "Typescript"],
-    description: "Wallet onboarding and setup experience."
+    title: "Nerala",
+    period: "June 2023 - Present",
+    description: "Nerala is a mobile application designed to preserve and promote Cameroon's linguistic heritage by providing tools for learning vernacular languages. Features include interactive flashcards, cultural stories, and progress tracking.",
   }
 ];
 
-const techStack = [
-  { name: 'Ruby', icon: '/ions/python.png' },
-  { name: 'HTML', icon: '/ions/html.svg' },
-  { name: 'CSS', icon: '/ions/css.png' },
-  { name: 'Sass', icon: '/ions/git.png' },
-  { name: 'Sass', icon: '/ions/kotlin.png' },
-  { name: 'Styled', icon: '/ions/Tailwincss.png' },
-  { name: 'Framer', icon: 'ions/dart.png' },
-  { name: 'Sass', icon: '/ions/flutter.png' },
+const skillsIcons = [
+  "/ions/flutter.png", "/ions/dart.png", "/ions/kotlin.png", "/ions/python.png", "/ions/html.svg", "/ions/css.png", "/ions/git.png", "/ions/Tailwincss.png",
+  // ...add more as needed for your stack
 ];
 
 const experience = [
   {
-    title: 'Frontend Web Developer Lead',
-    company: 'Yiel',
-    period: 'Mar 2024 - Present',
-    main: true,
-   
+    image: "/icons/alpha.png",
+    title: "Alpha Digital Service",
+    role: "Intern Mobile Developer",
+    period: "Sept 2024 - Dec 2024"
   },
   {
-    title: 'Mobile Application Developer',
-    company: 'VTC',
-    period: 'Jun 2023 - Feb 2024',
-    main: false,
-  
+    image: "/icons/mountainhub.png",
+    title: "Mountain Hub",
+    role: "Secretariat Volunteer",
+    period: "Oct 28, 2024 - Oct 30, 2024"
   },
   {
-    title: 'Full Stack Developer',
-    company: 'Nybble Group',
-    period: 'Apr 2021 - Jan 2024',
-    main: false,
-   
+    image: "/icons/uwaco.png",
+    title: "UWACO",
+    role: "Odoo Developer Intern",
+    period: "February 2024 - April 2024"
+  },
+  {
+    image: "/icons/ict.png",
+    title: "ICT University",
+    role: "WordPress Teacher",
+    period: "September 2024 - November 2024"
+  },
+  {
+    image: "/icons/tamla.png",
+    title: "Tamla Solutions",
+    role: "AI Research Intern",
+    period: "October 2024 - Present"
   }
 ];
 
-const socials = [
-  { name: 'Github', icon: '/ions/Type=Github.png' },
-  { name: 'Message', icon: '/figma.png' },
+const education = [
+  {
+    image: "/icons/ict.png",
+    title: "ICT University",
+    degree: "Bachelor's Degree of Computer Science (BCS)",
+    period: "2022 - 2025"
+  },
+  {
+    image: "/icons/lycee.png",
+    title: "Lycee Bilingue De Nyom",
+    degree: "Baccalaureat Scientifique (Serie C)",
+    period: "2015 - 2022"
+  }
 ];
+
+// Navigation bar icons and links (update paths to your icons)
+const navIcons = [
+  { name: "Home", icon: "/icons/home.svg", href: "#" },
+  { name: "Notes", icon: "/icons/note.svg", href: "#notes" },
+  { name: "WhatsApp", icon: "/icons/whatsapp.svg", href: "https://wa.me/652892452" },
+  { name: "GitHub", icon: "/icons/github.svg", href: "https://github.com/david123mbah" },
+  { name: "YouTube", icon: "/icons/youtube.svg", href: "https://youtube.com/" },
+  { name: "LinkedIn", icon: "/icons/linkedin.svg", href: "https://linkedin.com/in/david123mbah" },
+  { name: "X", icon: "/icons/x.svg", href: "https://x.com/" },
+];
+
+const Navbar = ({ isDark, setIsDark }) => (
+  <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center">
+    <div className="flex items-center bg-white dark:bg-[#23242a] border border-[#e5e5e5] dark:border-[#23242a] rounded-full shadow-lg px-4 py-2 gap-2"
+      style={{
+        boxShadow: "0 4px 32px 0 rgba(0,0,0,0.10)",
+        minWidth: 340,
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      {navIcons.map((nav, idx) => (
+        <a
+          key={nav.name}
+          href={nav.href}
+          target={nav.href.startsWith("http") ? "_blank" : undefined}
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f5f5f5] dark:hover:bg-[#18191c] transition"
+        >
+          <img src={nav.icon} alt={nav.name} className="w-6 h-6" />
+        </a>
+      ))}
+      {/* Divider */}
+      <div className="mx-2 w-[1px] h-8 bg-[#e5e5e5] dark:bg-[#23242a]" />
+      {/* Theme Switcher */}
+      <button
+        onClick={() => setIsDark(!isDark)}
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#f5f5f5] dark:bg-[#18191c] transition-all duration-500 relative"
+        aria-label="Toggle theme"
+      >
+        <span className="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+          style={{
+            transform: isDark ? "rotate(360deg)" : "rotate(0deg)",
+            transition: "transform 0.5s cubic-bezier(.68,-0.55,.27,1.55)",
+          }}
+        >
+          {isDark ? (
+            <Moon className="w-6 h-6 text-[#F7E924]" />
+          ) : (
+            <Sun className="w-6 h-6 text-[#23242a]" />
+          )}
+        </span>
+      </button>
+    </div>
+  </div>
+);
+
+// ...existing code...
+
+// Skill bar
+const SkillBar = () => (
+  <div className="w-full flex flex-col items-center mt-24 mb-2">
+    <h2 className="text-xl font-bold text-black mb-2">Skills, Languages and Tools</h2>
+    <div className="flex flex-wrap justify-center gap-2">
+      {skillsIcons.map((icon, idx) => (
+        <img key={idx} src={icon} alt="" className="w-10 h-10 rounded-lg bg-[#f5f5f5] border border-[#e5e5e5]" />
+      ))}
+    </div>
+  </div>
+);
+
+// Project section
+const ProjectSection = () => (
+  <section id="projects" className="w-full flex flex-col items-center mt-12">
+    <div className="mb-4">
+      <button className="bg-black text-white px-5 py-2 rounded-lg font-semibold">My Projects</button>
+    </div>
+    <h2 className="text-4xl font-bold text-black mb-2">Check out my latest work</h2>
+    <p className="text-lg text-gray-700 mb-8 text-center max-w-2xl">I've worked on a variety of projects, from simple websites to complex web applications. Here are a few of my favorites.</p>
+    <div className="flex flex-wrap justify-center gap-8 w-full">
+      {projects.map((proj, idx) => (
+        <div key={proj.title} className="bg-white rounded-xl shadow-md overflow-hidden w-[350px]">
+          <img src={proj.image} alt={proj.title} className="w-full h-[180px] object-cover" />
+          <div className="p-4">
+            <div className="font-bold text-lg text-black">{proj.title}</div>
+            <div className="text-sm text-gray-500">{proj.period}</div>
+            <div className="mt-2 text-gray-700 text-sm">{proj.description}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+// Experience section
+const ExperienceSection = () => (
+  <section id="experience" className="w-full flex flex-col items-center mt-16">
+    <h2 className="text-2xl font-bold text-black mb-4">Work Experience</h2>
+    <div className="w-full max-w-2xl">
+      {experience.map((exp, idx) => (
+        <div key={exp.title} className="flex items-center justify-between py-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <img src={exp.image} alt={exp.title} className="w-12 h-12 rounded-full bg-[#f5f5f5] border border-[#e5e5e5]" />
+            <div>
+              <div className="font-semibold text-black">{exp.title}</div>
+              <div className="text-gray-600 text-sm">{exp.role}</div>
+            </div>
+          </div>
+          <div className="text-gray-500 text-sm">{exp.period}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+// Education section
+const EducationSection = () => (
+  <section id="education" className="w-full flex flex-col items-center mt-12">
+    <h2 className="text-2xl font-bold text-black mb-4">Education</h2>
+    <div className="w-full max-w-2xl">
+      {education.map((edu, idx) => (
+        <div key={edu.title} className="flex items-center justify-between py-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <img src={edu.image} alt={edu.title} className="w-12 h-12 rounded-full bg-[#f5f5f5] border border-[#e5e5e5]" />
+            <div>
+              <div className="font-semibold text-black">{edu.title}</div>
+              <div className="text-gray-600 text-sm">{edu.degree}</div>
+            </div>
+          </div>
+          <div className="text-gray-500 text-sm">{edu.period}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+// Main profile header
+const ProfileHeader = () => (
+  <section className="w-full flex flex-col items-center mt-32 mb-8">
+    <h1 className="text-5xl font-bold text-black mb-2">Hi, I'm David <span className="inline-block">👋</span></h1>
+    <div className="flex items-center justify-center gap-6 mb-4">
+      <p className="text-xl text-gray-700 max-w-xl text-center">
+        Full-Stack Developer passionate about bringing ideas to life through the power of code. I aim to bring my client's vision to life and make a lasting impact in the digital realm.
+      </p>
+      <img src="/mbah.jpg" alt="profile" className="w-24 h-24 rounded-full object-cover bg-[#bdbdbd] shadow-lg" />
+    </div>
+    <div className="w-full max-w-2xl text-left mt-4">
+      <div className="font-bold text-lg text-black mb-1">About</div>
+      <p className="text-gray-700 text-base">
+        I strive to create web applications that not only meet client goals but also delight users. With a strong attention to detail and a drive for staying updated with the latest trends.
+        I am currently pursuing a <span className="underline">Bachelor's degree in computer science</span>, interned at tech companies, and competed in over 3+ hackathons for fun, learning and sharing.
+        I also had the pleasure of being a part of the first edition of the Cameroon International Tech Summit 2024 <a href="#" className="underline">CITS</a>.
+      </p>
+    </div>
+    <div className="mt-8">
+      <a href="/DavidmbahCv.pdf" download className="bg-black text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-900 transition">My CV</a>
+    </div>
+  </section>
+);
 
 const Portfolio = () => {
   const [isDark, setIsDark] = useState(false);
 
-  const Card = ({ children, className = '', style }) => (
-    <div
-      className={`
-        ${isDark ? 'bg-card border-lightBorder text-white' : 'bg-[#23242a] border-[#23242a] text-white'}
-        border rounded-3xl shadow-lg ${className}
-      `}
-      style={{
-        ...style,
-        boxShadow: isDark
-          ? '0 4px 32px 0 rgba(0,0,0,0.18)'
-          : '0 4px 32px 0 rgba(0,0,0,0.18)',
-        background: isDark ? undefined : 'rgba(35,36,42,0.95)',
-        borderRadius: "1.5rem"
-      }}
-    >
-      {children}
-    </div>
-  );
-
   return (
-    <div className={`min-h-screen ${font} ${isDark ? 'bg-primary text-white' : 'bg-[#18191c] text-white'} transition-colors duration-500 py-12 px-2 md:px-0`}>
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Left column */}
-        <div className="flex flex-col gap-8">
-          {/* Profile Card */}
-          <Card className="flex flex-col px-12 py-10" style={{ minHeight: 230 }}>
-            <div className="flex items-center gap-8 mb-4">
-              <img src="/mbah.jpg" alt="Mbah Atangana David" className="w-24 h-24 rounded-full object-cover bg-[#bdbdbd]" />
-              <div>
-                <h1 className="text-[2.2rem] font-bold tracking-tight font-[Montserrat]">Mbah Atangana David</h1>
-                
-              </div>
-            </div>
-            <p className="text-base leading-relaxed text-grayText font-[Montserrat]">
-              Passionate Software Engineer and Mobile Developer (Flutter, React.js, Node.js) with a strong AI/ML background. 
-              Experienced in building scalable web and mobile apps, leading teams, and architecting robust solutions. 
-              Fluent in English and French.  BSc in Software Engineering, ICTU Yaounde, 2025.
-            </p>
-          </Card>
-
-        
-
-          {/* Tech Stack */}
-          <Card className="flex flex-col justify-between px-12 py-8" style={{ minHeight: 140 }}>
-            <div className="relative w-full overflow-hidden mb-4">
-              <div className="flex animate-marquee w-max gap-4">
-                {[...techStack, ...techStack, ...techStack].map((tech, i) => (
-                  <div key={i} className="w-14 h-14 flex items-center justify-center rounded-2xl bg-[#23242a]">
-                    <img src={tech.icon} alt={tech.name} className="w-8 h-8 object-contain" />
-                  </div>
-                ))}
-              </div>
-              {/* Gradient fade on left/right for better UX */}
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-[#23242a] via-transparent to-transparent z-10" />
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[#23242a] via-transparent to-transparent z-10" />
-            </div>
-            <div>
-              <span className="text-xs uppercase tracking-[0.1em] text-mutedText font-[Montserrat]">CURRENTLY USING</span>
-              <span className="block text-xl font-semibold mt-1 font-[Montserrat]">
-                TECH I <span className="text-[#F15A2B]">♥</span>
-              </span>
-            </div>
-          </Card>
-
-          {/* Socials */}
-          <div className="flex gap-8">
-            <Card className="flex items-center justify-center w-full py-8" style={{ height: 100 }}>
-              <img src={socials[0].icon} alt={socials[0].name} className="w-12 h-12" />
-            </Card>
-            <Card className="flex items-center justify-center w-full py-8" style={{ height: 100 }}>
-              <img src={socials[1].icon} alt={socials[1].name} className="w-12 h-12" />
-            </Card>
-          </div>
-
-          {/* Project Cards (left column, two stacked) */}
-          {projectsLeft.map((proj, idx) => (
-            <Card key={proj.title} className="flex flex-col items-start justify-between p-0 w-full" style={{
-              minHeight: 480,
-              height: 480,
-              padding: 0,
-              borderRadius: "1.5rem",
-              marginTop: "0.5rem"
-            }}>
-              <div className="w-full h-[210px] rounded-t-3xl overflow-hidden bg-[#23242a] flex items-center justify-center">
-                <img src={proj.image} alt={proj.title} className="object-cover w-full h-full" />
-              </div>
-              <div className="flex-1 flex flex-col justify-between px-6 py-6 w-full">
-                <h3 className="text-xl font-bold mb-2 tracking-tight leading-tight">{proj.title}</h3>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {proj.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="bg-transparent text-mutedText text-xs px-2 py-1 rounded font-semibold border border-mutedText"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-2 text-base text-mutedText font-medium">{proj.description}</div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* Right column */}
-        <div className="flex flex-col gap-8">
-          {/* Marquee Portfolio Header */}
-          <Card className="flex items-center justify-center px-10 py-4 overflow-hidden" style={{ minHeight: 60 }}>
-            <div className="relative w-full overflow-hidden">
-              <div className="flex animate-marquee w-max gap-8 whitespace-nowrap">
-                {Array(3).fill(0).map((_, idx) => (
-                  <span key={idx} className="uppercase text-mutedText font-semibold tracking-widest text-xl font-[Montserrat] mx-8">
-                    PERSONAL <span className="text-white font-bold">PORTFOLIO</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Card>
-
-          {/* Resume and Theme Toggle */}
-          <div className="flex gap-8">
-            <Card className="flex-1 flex flex-col justify-between px-8 py-6" style={{ minHeight: 90 }}>
-              <p className="text-xs text-mutedText uppercase tracking-widest mb-1 font-[Montserrat]">2024 CV</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-semibold font-[Montserrat]">RESUME</span>
-                <div className="flex gap-2">
-                  <a
-                    href="/DavidmbahCv.pdf"
-                    download
-                    className="bg-card hover:bg-cardSoft p-3 rounded-full flex items-center"
-                    title="Download CV"
-                  >
-                    <Download className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="/DavidmbahCv.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-card hover:bg-cardSoft p-3 rounded-full flex items-center"
-                    title="View CV"
-                  >
-                    <Eye className="w-6 h-6" />
-                  </a>
-                </div>
-              </div>
-            </Card>
-            <Card className="flex-1 flex items-center justify-center px-8 py-6" style={{ minHeight: 90 }}>
-              <div className="flex w-full gap-4">
-                <button
-                  onClick={() => setIsDark(false)}
-                  className={`flex-1 flex items-center justify-center rounded-[18px] py-3 transition-all duration-300 ${!isDark ? 'bg-white shadow' : 'bg-card'}`}
-                >
-                  <Sun className={`w-7 h-7 ${!isDark ? 'text-[#232323]' : 'text-mutedText'}`} />
-                </button>
-                <button
-                  onClick={() => setIsDark(true)}
-                  className={`flex-1 flex items-center justify-center rounded-[18px] py-3 transition-all duration-300 ${isDark ? 'bg-white shadow' : 'bg-card'}`}
-                >
-                  <Moon className={`w-7 h-7 ${isDark ? 'text-[#232323]' : 'text-mutedText'}`} />
-                </button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Experience */}
-          <Card className="flex flex-col px-10 py-8" style={{ minHeight: 220 }}>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs text-mutedText uppercase tracking-widest font-[Montserrat]">EXPERIENCE</span>
-            </div>
-            {experience.map((exp, idx) => (
-              <div
-                key={exp.company}
-                className={`mb-5 ${!exp.main ? 'line-through opacity-60' : ''}`}
-              >
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-bold font-[Montserrat] mb-1">{exp.title} — {exp.company}</h2>
-                  <div className="text-mutedText text-sm">{exp.period}</div>
-                </div>
-              
-              </div>
-            ))}
-          </Card>
-
-          {/* Project Cards (right column, two stacked) */}
-          {projectsRight.map((proj, idx) => (
-            <Card key={proj.title} className="flex flex-col items-start justify-between p-0 w-full" style={{
-              minHeight: 480,
-              height: 480,
-              padding: 0,
-              borderRadius: "1.5rem",
-              marginTop: "0.5rem"
-            }}>
-              <div className="w-full h-[210px] rounded-t-3xl overflow-hidden bg-[#23242a] flex items-center justify-center">
-                <img src={proj.image} alt={proj.title} className="object-cover w-full h-full" />
-              </div>
-              <div className="flex-1 flex flex-col justify-between px-6 py-6 w-full">
-                <h3 className="text-xl font-bold mb-2 tracking-tight leading-tight">{proj.title}</h3>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {proj.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="bg-transparent text-mutedText text-xs px-2 py-1 rounded font-semibold border border-mutedText"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-2 text-base text-mutedText font-medium">{proj.description}</div>
-              </div>
-            </Card>
-          ))}
-        </div>
+    <div className={`${isDark ? 'dark bg-[#18191c] text-white' : 'bg-white text-[#23242a]'} min-h-screen font-sans transition-colors duration-500`}>
+      <Navbar isDark={isDark} setIsDark={setIsDark} />
+      <div className="max-w-5xl mx-auto px-4">
+        <ProfileHeader />
+        <ExperienceSection />
+        <EducationSection />
+        <SkillBar />
+        <ProjectSection />
+        {/* ...add more sections as needed... */}
       </div>
     </div>
   );
