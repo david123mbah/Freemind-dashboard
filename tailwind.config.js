@@ -34,6 +34,7 @@ export const theme = {
       "shooting-star": "shooting 3s infinite",
       marquee: 'marquee 40s linear infinite',
       marquee2: 'marquee2 40s linear infinite',
+      bounce: 'bounce 0.6s', // Ensure bounce is present
     },
     keyframes: {
       twinkle: {
