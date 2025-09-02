@@ -7,6 +7,10 @@ const logos = [
   "/WhatsApp Image 2024-06-20 at 09.41.56_fd756803.jpg",
   "/Plan de travail 3@4x-100 copy 2.jpeg",
   "/myyiel.png",
+  "/WhatsApp Image 2024-05-03 at 08.23.05_3d4d58eb.jpg",
+  "/WhatsApp Image 2024-06-20 at 09.41.56_fd756803.jpg",
+  "/Plan de travail 3@4x-100 copy 2.jpeg",
+  "/myyiel.png",
 
 ];
 

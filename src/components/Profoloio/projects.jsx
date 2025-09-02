@@ -25,11 +25,11 @@ const projects = [
 		tech: ["Next.js", "Typecript" , "ProgressSQL", "Prisma" , "Gemina AI" , "Firebase"],
 	},
 	{
-		image: "/project4.png",
-		title: "Raha",
+		image: "/Screenshot (759).png",
+		title: "MoveIn",
 		description:
-			"A payment app that offers a fast, secure, and convenient way to make transactions",
-		tech: ["React Native", "Node.js"],
+			"A Ride sharing app that connects drivers and passengers for convenient transportation.",
+		tech: ["Flutter", "Firebase"],
 	},
 	// ...add more projects as needed
 ];
@@ -41,20 +41,20 @@ const Projects = () => {
 
 	return (
 		<motion.section
-			className="w-full py-16 bg-black font-[Montserrat]"
+			className="w-full py-10 md:py-16 bg-black font-[Montserrat]"
 			initial={{ opacity: 0, y: 40 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
-			<div className="text-center mb-8">
-				<span className="text-[#1de9b6] font-bold text-sm tracking-wide uppercase">
+			<div className="text-center mb-8 px-4">
+				<span className="text-[#1de9b6] font-bold text-xs md:text-sm tracking-wide uppercase">
 					Selected Projects
 				</span>
-				<h2 className="text-white text-3xl md:text-4xl font-bold mt-4 mb-2">
+				<h2 className="text-white text-2xl md:text-4xl font-bold mt-4 mb-2">
 					Explore some of my projects
 				</h2>
 			</div>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10 max-w-5xl mx-auto px-4">
 				{displayedProjects.map((proj, idx) => (
 					<div
 						key={idx}
@@ -63,14 +63,14 @@ const Projects = () => {
 						<img
 							src={proj.image}
 							alt={proj.title}
-							className="w-full h-56 object-cover"
+							className="w-full h-44 md:h-56 object-cover"
 						/>
-						<div className="p-6 flex-1 flex flex-col justify-between">
+						<div className="p-4 md:p-6 flex-1 flex flex-col justify-between">
 							<div>
-								<h3 className="text-white text-xl font-bold mb-2">
+								<h3 className="text-white text-lg md:text-xl font-bold mb-2">
 									{proj.title}
 								</h3>
-								<p className="text-gray-400 text-base mb-4">
+								<p className="text-gray-400 text-sm md:text-base mb-4">
 									{proj.description}
 								</p>
 							</div>
@@ -82,7 +82,7 @@ const Projects = () => {
 									{proj.tech.map((tech, tIdx) => (
 										<span
 											key={tIdx}
-											className="px-3 py-1 rounded-full bg-[#23242A] text-[#1de9b6] text-xs font-semibold"
+											className="px-2 md:px-3 py-1 rounded-full bg-[#23242A] text-[#1de9b6] text-xs font-semibold"
 										>
 											{tech}
 										</span>
@@ -96,7 +96,7 @@ const Projects = () => {
 			{!showAll && (
 				<div className="flex justify-center mt-10">
 					<button
-						className="px-8 py-3 rounded-full bg-[#1de9b6] text-black text-lg font-semibold font-[Montserrat] shadow-lg hover:bg-[#00bfae] transition"
+						className="px-6 md:px-8 py-2 md:py-3 rounded-full bg-[#1de9b6] text-black text-base md:text-lg font-semibold font-[Montserrat] shadow-lg hover:bg-[#00bfae] transition"
 						onClick={() => setShowAll(true)}
 					>
 						More

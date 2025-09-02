@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import CompanySection from "./company";
 
 // Concentric shadow lines background
 const ShadowLines = () => (
@@ -66,6 +67,7 @@ const MyHero = () => (
         Get started
       </motion.button>
     </motion.div>
+    <CompanySection />
   </section>
 );
 
