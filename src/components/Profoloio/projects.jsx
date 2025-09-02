@@ -4,25 +4,25 @@ import { motion } from "framer-motion";
 // Example projects data
 const projects = [
 	{
-		image: "/project1.png",
-		title: "Paypen",
+		image: "/Screenshot (27).png",
+		title: "Freemind",
 		description:
 			"A web app built solely for the purpose of employee pension payment",
-		tech: ["React", "Firebase", "Tailwind CSS"],
+		tech: ["React", "Firebase", "Tailwind CSS" , " https://freemind-final-version-website-official.vercel.app"],
 	},
 	{
-		image: "/project2.png",
-		title: "Instaclean Website",
+		image: "/Screenshot (1536).png",
+		title: "Freemind App",
 		description:
-			"Tech-powered marketplace for professional cleaning services in Nigeria",
-		tech: ["Next.js", "MongoDB", "Styled Components"],
+			"Freemind mental health app for mediation,mood tracking , doctor appiontment and Ai chat bot",
+		tech: ["Flutter", "Firebase", "Dart"],
 	},
 	{
-		image: "/project3.png",
-		title: "Gida App",
+		image: "/image copy 2.png",
+		title: "CarePulse",
 		description:
-			"A mobile app that connects vetted professional cleaning service providers to customers",
-		tech: ["Flutter", "Firebase"],
+			"CarePulse is an AI-driven health application that seamlessly integrates the wisdom of traditional Cameroonian medicine with cutting-edge technology, offering users personalized, culturally relevant healthcare solutions. Designed to bridge the gap between ancestral remedies and modern healthcare, the app provides AI-powered diagnostics, plant identification, and personalized care plans, while connecting users with verified traditional healers for deeper insights.",
+		tech: ["Next.js", "Typecript" , "ProgressSQL", "Prisma" , "Gemina AI" , "Firebase"],
 	},
 	{
 		image: "/project4.png",
