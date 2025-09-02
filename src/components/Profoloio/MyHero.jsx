@@ -64,7 +64,7 @@ const MyHero = () => (
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.7 }}
       >
-        Get started
+        Download CV
       </motion.button>
     </motion.div>
     <CompanySection />
