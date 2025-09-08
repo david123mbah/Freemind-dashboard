@@ -31,7 +31,7 @@ const marqueeVariants = {
 const CompanySection = () => (
   <section className="w-full py-12 flex flex-col items-center bg-black">
     <h2 className="text-center text-lg md:text-xl font-medium text-gray-300 mb-8 font-[Montserrat]">
-      Companies I've worked with
+      Companies I've worked with,,,,,,,,
     </h2>
     <div className="relative w-full flex justify-center items-center overflow-x-hidden" style={{ height: 90 }}>
       {/* Fade edges */}
