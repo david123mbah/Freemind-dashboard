@@ -4,32 +4,25 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./index.css";
 
-import Dashboard from "./components/Dashboard/Dashboard";
-
-import Doctors from "./components/Doctors/Doctors";
-import Login from "./components/login/Login";
-import Chats from "./components/Chats/Chats";
-import Sidebar from "./components/Doctors/Sidebar";
-
-import NavbarHero from "./components/Profoloio/NavbarHero";
-import MyHero from "./components/Profoloio/MyHero";
-import CompanySection from "./components/Profoloio/company";
-import About from "./components/Profoloio/About";
-import ContactMe from "./components/Profoloio/contactme";
-import Projects from "./components/Profoloio/projects";
-import Portfolio from "./components/Profoloio/profolio";
-import Footer from "./components/Profoloio/Footer";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/footer/Footer";
+import Homepage from "./components/Homepage/Homepage";
+import TopNews from "./components/News/TopNews";
+import NewsDetail from "./components/News/NewsDetail";
+import AINews from "./components/AI-News/AINews";
+import AINewsDetail from "./components/AI-News/AINewsDetail";
 
 
 const App = () => {
   return (
     <div className="">
-      <NavbarHero />
+      <Navbar />
       <Routes>
-        <Route path="/" element={<MyHero />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/contact" element={<ContactMe />} />
+       <Route path="/" element={<Homepage />} />
+       <Route path="/top-news" element={<TopNews />} />
+       <Route path="/top-news/:id" element={<NewsDetail />} />
+        <Route path="/ai-news" element={<AINews />} />
+        <Route path="/ai-news/:id" element={<AINewsDetail />} />
         {/* Add more routes as needed */}
       </Routes>
       <Footer />

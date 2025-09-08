@@ -8,21 +8,31 @@ export const content = [
 
 export const theme = {
   fontFamily: {
-    sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+    montserrat: ['Montserrat', 'sans-serif'],
+    sans: [
+      'Montserrat', // Primary font for professional vibe
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Segoe UI',
+      'Roboto',
+      'Helvetica Neue',
+      'Arial',
+      'sans-serif'
+    ],
   },
   extend: {
     colors: {
-      primary: "#0F0F11", // Dark background
-      accent: "#F7E924",  // Yellow accent (retain as brand color)
-      highlight: "#F15A2B", // Orange accent (if needed)
-      card: "#1C1D22",  // Dark card background
-      cardSoft: "#2A2B30",  // Slightly lighter than card
-      grayText: "#B4B4B6", // Light grey for less important text
-      mutedText: "#8F8F92", // Even softer text color
-      lightBorder: "#2D2E33", // Subtle borders
-      background: "#18191C", // App background
-      softGray: "#C7C8C9", // Button icons
-      buttonBg: "#2F3035",  // Button background
+      primary: "#0F0F11",
+      accent: "#F7E924",
+      highlight: "#F15A2B",
+      card: "#1C1D22",
+      cardSoft: "#2A2B30",
+      grayText: "#B4B4B6",
+      mutedText: "#8F8F92",
+      lightBorder: "#2D2E33",
+      background: "#18191C",
+      softGray: "#C7C8C9",
+      buttonBg: "#2F3035",
       border: "hsl(var(--border))",
     },
     backgroundImage: {
@@ -34,7 +44,7 @@ export const theme = {
       "shooting-star": "shooting 3s infinite",
       marquee: 'marquee 40s linear infinite',
       marquee2: 'marquee2 40s linear infinite',
-      bounce: 'bounce 0.6s', // Ensure bounce is present
+      bounce: 'bounce 0.6s',
     },
     keyframes: {
       twinkle: {
@@ -74,3 +84,10 @@ export const theme = {
 };
 
 export const plugins = [];
+
+module.exports = {
+  content,
+  theme,
+  plugins,
+  darkMode: 'class',
+};
