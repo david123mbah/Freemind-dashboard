@@ -432,7 +432,7 @@ const Apple = () => {
             <div 
               key={idx} 
               className={`bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group ${
-                viewMode === "list" ? "flex gap-6 p-6" : ""
+                viewMode === "list" ? "flex gap-6 p-6 min-h-[200px]" : "flex flex-col h-full"
               }`}
             >
               {/* Image Section */}
@@ -451,14 +451,9 @@ const Apple = () => {
                   )}
                 </div>
 
-                {/* Wishlist Button */}
-                <button className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-sm transition-all group-hover:scale-110">
-                  <svg className="w-5 h-5 text-gray-600 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
-
-                <div className={`relative overflow-hidden ${viewMode === "list" ? "h-32" : "h-56"} bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl`}>
+                <div className={`relative overflow-hidden ${
+                  viewMode === "list" ? "h-32 rounded-xl" : "h-48 rounded-t-2xl"
+                } bg-gradient-to-br from-gray-50 to-gray-100`}>
                   <Link to={`/apple/${review.id}`}>
                     <img 
                       src={review.img} 
@@ -470,61 +465,65 @@ const Apple = () => {
               </div>
 
               {/* Content Section */}
-              <div className={`${viewMode === "list" ? "flex-1" : "p-6"}`}>
-                {/* Category & Rating */}
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold bg-gray-100 px-2 py-1 rounded-full">
-                    {review.category}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-yellow-400 text-sm">★</span>
-                    <span className="text-sm font-semibold text-gray-700">{review.rating}</span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <Link to={`/apple/${review.id}`}>
-                  <h2 className="font-bold text-gray-900 text-lg mb-3 line-clamp-2 group-hover:text-yellow-600 transition-colors leading-tight">
-                    {review.title}
-                  </h2>
-                </Link>
-
-                {/* Author & Date */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-gray-600">
-                      {review.author.split(' ').map(n => n[0]).join('')}
+              <div className={`${
+                viewMode === "list" ? "flex-1 flex flex-col justify-between" : "p-6 flex-1 flex flex-col"
+              }`}>
+                <div className="flex-1">
+                  {/* Category & Rating */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold bg-gray-100 px-2 py-1 rounded-full">
+                      {review.category}
                     </span>
-                  </div>
-                  <div>
-                    <p className="text-gray-700 text-sm font-medium">{review.author}</p>
-                    <p className="text-gray-500 text-xs">{review.date}</p>
-                  </div>
-                </div>
-
-                {/* Price & Pros (List view) */}
-                {viewMode === "list" && (
-                  <div className="mb-4">
-                    <div className="flex items-center gap-4 mb-2">
-                      <span className="text-2xl font-bold text-gray-900">{review.price}</span>
-                      <div className="flex flex-wrap gap-1">
-                        {review.pros.slice(0, 2).map((pro, index) => (
-                          <span key={index} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                            ✓ {pro}
-                          </span>
-                        ))}
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-400 text-sm">★</span>
+                      <span className="text-sm font-semibold text-gray-700">{review.rating}</span>
                     </div>
                   </div>
-                )}
 
-                {/* Summary */}
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {review.summary}
-                </p>
+                  {/* Title */}
+                  <Link to={`/apple/${review.id}`}>
+                    <h2 className="font-bold text-gray-900 text-lg mb-3 line-clamp-2 group-hover:text-yellow-600 transition-colors leading-tight">
+                      {review.title}
+                    </h2>
+                  </Link>
 
-                {/* Actions */}
-                <div className="flex gap-2">
+                  {/* Author & Date */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-semibold text-gray-600">
+                        {review.author.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-gray-700 text-sm font-medium">{review.author}</p>
+                      <p className="text-gray-500 text-xs">{review.date}</p>
+                    </div>
+                  </div>
+
+                  {/* Price & Pros (List view) */}
+                  {viewMode === "list" && (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-4 mb-2">
+                        <span className="text-2xl font-bold text-gray-900">{review.price}</span>
+                        <div className="flex flex-wrap gap-1">
+                          {review.pros.slice(0, 2).map((pro, index) => (
+                            <span key={index} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                              ✓ {pro}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Summary */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {review.summary}
+                  </p>
+                </div>
+
+                {/* Actions - Always at bottom */}
+                <div className="flex gap-2 mt-auto">
                   <Link
                     to={`/apple/${review.id}`}
                     className="flex-1 bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center text-sm"

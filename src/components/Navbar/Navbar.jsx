@@ -20,62 +20,80 @@ const Navbar = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (
-		<nav className="w-full bg-white shadow-sm px-4 py-3 flex items-center justify-between relative">
+		<nav className="w-full bg-white/95 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
 			<div className="flex items-center gap-3">
-				<img src="/ions/Logos.png" alt="TCOLTECH Logo" className="h-10 w-10" />
-				<span className="font-bold text-xl text-yellow-400 tracking-wide">TCOLTECH</span>
+				<div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center">
+					<span className="text-white font-bold text-lg">T</span>
+				</div>
+				<span className="font-bold text-2xl text-gray-900 tracking-tight">TcolTech</span>
 			</div>
 
 			{/* Desktop Nav */}
-			<div className="hidden md:flex gap-6 items-center">
+			<div className="hidden lg:flex gap-6 items-center">
 				{navItems.map((item) => (
 					<Link
 						key={item.name}
 						to={item.path}
-						className={`text-gray-500 font-medium hover:text-yellow-400 transition px-2 py-1 rounded-lg ${location.pathname === item.path ? "bg-black text-white" : ""}`}
+						className={`text-gray-600 font-medium hover:text-gray-900 transition-colors relative text-sm ${
+							location.pathname === item.path ? "text-gray-900" : ""
+						}`}
 					>
 						{item.name}
+						{location.pathname === item.path && (
+							<div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-yellow-400 rounded-full"></div>
+						)}
 					</Link>
 				))}
 			</div>
-			<Link
-				to="/contact"
-				className="hidden md:inline-block ml-8 px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg shadow hover:bg-yellow-500 transition"
-			>
-				Contact Us
-			</Link>
+			<div className="hidden lg:flex items-center gap-4">
+				<Link
+					to="/contact"
+					className="px-6 py-2.5 bg-black text-white font-medium rounded-xl hover:bg-gray-800 transition-colors"
+				>
+					Contact
+				</Link>
+			</div>
 
-			{/* Hamburger Icon */}
+			{/* Mobile Menu Button */}
 			<button
-				className="md:hidden flex items-center text-3xl text-yellow-400 z-20"
+				className="lg:hidden flex items-center text-gray-700 z-20 p-2 hover:bg-gray-100 rounded-lg transition-colors"
 				onClick={() => setMenuOpen(!menuOpen)}
 				aria-label="Toggle menu"
 			>
-				<svg width="32" height="32" fill="currentColor" viewBox="0 0 20 20">{menuOpen ? (<path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />) : (<path fillRule="evenodd" d="M3 6a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 4a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />)}</svg>
+				<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					{menuOpen ? (
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+					) : (
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+					)}
+				</svg>
 			</button>
 
 			{/* Mobile Menu */}
 			<div
-				className={`fixed top-0 left-0 w-full h-full bg-white z-10 flex flex-col items-center pt-24 transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
-				style={{ boxShadow: menuOpen ? "0 0 0 100vmax rgba(0,0,0,0.2)" : "none" }}
+				className={`fixed top-0 left-0 w-full h-full bg-white/95 backdrop-blur-md z-10 flex flex-col items-center justify-center transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
 			>
-				{navItems.map((item) => (
+				<div className="flex flex-col items-center space-y-8">
+					{navItems.map((item) => (
+						<Link
+							key={item.name}
+							to={item.path}
+							className={`text-2xl font-medium transition-colors ${
+								location.pathname === item.path ? "text-yellow-400" : "text-gray-700 hover:text-gray-900"
+							}`}
+							onClick={() => setMenuOpen(false)}
+						>
+							{item.name}
+						</Link>
+					))}
 					<Link
-						key={item.name}
-						to={item.path}
-						className={`w-3/4 text-center my-2 py-3 text-lg font-semibold rounded-lg transition ${location.pathname === item.path ? "bg-black text-white" : "text-gray-700 hover:bg-yellow-100 hover:text-yellow-500"}`}
+						to="/contact"
+						className="mt-8 px-8 py-3 bg-black text-white font-medium rounded-xl hover:bg-gray-800 transition-colors"
 						onClick={() => setMenuOpen(false)}
 					>
-						{item.name}
+						Contact
 					</Link>
-				))}
-				<Link
-					to="/contact"
-					className="w-3/4 text-center my-4 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow hover:bg-yellow-500 transition"
-					onClick={() => setMenuOpen(false)}
-				>
-					Contact Us
-				</Link>
+				</div>
 			</div>
 		</nav>
 	);

@@ -19,6 +19,9 @@ import Gadgets from "./components/Gadgets/Gadgets";
 import GadgetDetail from "./components/Gadgets/GadgetDetail";
 import Android from "./components/Androids/Android";
 import AndroidDetail from "./components/Androids/AndroidDetail";
+import Technology from "./components/Techology/Technology";
+import TechnologyDetail from "./components/Techology/TechnologyDetail";
+import About from "./components/Aboutpage/About";
 
 
 const App = () => {
@@ -39,6 +42,9 @@ const App = () => {
         <Route path="/gadgets/:id" element={<GadgetDetail />} />
         <Route path="/android" element={<Android />} />
         <Route path="/android/:id" element={<AndroidDetail />} />
+        <Route path="/technology" element={<Technology />} />
+        <Route path="/technology/:id" element={<TechnologyDetail />} />
+        <Route path="/about" element={<About />} />
         {/* Add more routes as needed */}
       </Routes>
       <Footer />
